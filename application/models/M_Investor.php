@@ -91,8 +91,13 @@ class M_Investor extends CI_Model
     }
 
     function tolakValidasiTopup($idTopup){
+
+        $dataUbah = array(
+            'status'=>2
+        );
+
         $this->db->where('idTopup',$idTopup);
-        $this->db->delete($this->tbl_topup);
+        $this->db->update($this->tbl_topup,$dataUbah);
         return $this->db->affected_rows();
     }
 

@@ -72,7 +72,10 @@ class Investor extends REST_Controller
         $saldoTopup = $data['saldoTopup'];
 
         $investor = $this->M_Investor->getInvestorById($idInvestor)->result();
+        $topup = $this->M_Investor->getTopUpById($idTopup)->result();
         $saldoInvestor = $investor[0]->saldo_wallet;
+        $emailInvestor = $investor[0]->email;
+        $namaInvestor = $investor[0]->namaInvestor;
         $saldoNow = $saldoInvestor + $saldoTopup;
 
         $result = $this->M_Investor->terimaValidasiTopup($idTopup,$idInvestor,$saldoNow);
@@ -81,6 +84,35 @@ class Investor extends REST_Controller
         } else {
             $this->response(array('status' => 'fail', 502));
         }
+
+        //kriim notifikasi Email.
+        /*
+        $data['namaInvestor'] = $namaInvestor;
+
+        $notif = $this->load->view('invoice_new',$topup,TRUE);
+
+        $config['protocol'] = "smtp";
+        $config['smtp_host'] = "ssl://smtp.gmail.com";
+        $config['smtp_port'] = "465";
+        $config['smtp_user'] = "tapiskuy3@gmail.com";
+        $config['smtp_pass'] = "qwerty12345.";
+        $config['charset'] = "utf-8";
+        $config['mailtype'] = "html";
+        $config['newline'] = "\r\n";
+
+        $this->email->initialize($config);
+
+        $from_email = "tapiskuy3@gmail.com";
+        $emailInvestor= 'arifglory46@gmail.com' ;
+
+        $this->email->from($from_email,"Admin Ternak.in");
+        $this->email->to($emailInvestor);
+        $this->email->subject('Verifikasi Topup');
+        $this->email->message($notif);
+        $this->email->send();
+        $this->load->view('invoice_new',$topup);
+
+        */
         $this->response( 200);
     }
 
