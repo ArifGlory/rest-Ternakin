@@ -10,6 +10,7 @@ class M_Investor extends CI_Model
 {
     var $table = "investor";
     var $tbl_topup = "tbl_topup";
+    var $tbl_detail_invest = "detail_investasi";
 
     function getInvestorById($id){
         $this->db->from($this->table);
@@ -21,6 +22,10 @@ class M_Investor extends CI_Model
 
     function simpanInvestor($data){
         $this->db->insert($this->table,$data);
+    }
+
+    function simpanDetailInvestasi($data){
+        $this->db->insert($this->tbl_detail_invest,$data);
     }
 
     function listInvestor(){
@@ -98,6 +103,30 @@ class M_Investor extends CI_Model
 
         $this->db->where('idTopup',$idTopup);
         $this->db->update($this->tbl_topup,$dataUbah);
+        return $this->db->affected_rows();
+    }
+
+    function updateSaldoInvestor($saldoUpdate,$idInvestor){
+        $dataUbahSaldo = array(
+            'saldo_wallet'=>$saldoUpdate
+        );
+
+        //ubah saldo Investor
+        $this->db->where('idInvestor',$idInvestor);
+        $this->db->update($this->table,$dataUbahSaldo);
+
+        return $this->db->affected_rows();
+    }
+
+    function updateReturnInvest($idDetailInvest,$returnInvest){
+        $dataUbahRoI = array(
+          'returnInvest'=>$returnInvest
+        );
+
+        //ubah return Invest Investor
+        $this->db->where('idDetailInvestasi',$idDetailInvest);
+        $this->db->update($this->tbl_detail_invest,$dataUbahRoI);
+
         return $this->db->affected_rows();
     }
 

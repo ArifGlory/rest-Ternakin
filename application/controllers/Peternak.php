@@ -18,6 +18,7 @@ class Peternak extends REST_Controller
         $this->load->helper(array('url'));
         $this->load->library(array('form_validation','pagination','session'));
         $this->load->model('M_Peternak');
+        $this->load->model('M_Proyek');
     }
 
 
@@ -25,4 +26,10 @@ class Peternak extends REST_Controller
         $proyek = $this->M_Peternak->getPeternakById($id)->result();
         $this->response($proyek, 200);
     }
+
+    function getInvestorDiProyek_get($idProyek){
+        $investor = $this->M_Proyek->getInvestorProyek($idProyek)->result();
+        $this->response($investor, 200);
+    }
+
 }

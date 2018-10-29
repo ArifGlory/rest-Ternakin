@@ -17,6 +17,7 @@ class Investor extends REST_Controller
         $this->load->helper(array('url'));
         $this->load->library(array('form_validation','pagination','session'));
         $this->load->model('M_Investor');
+        $this->load->model('M_Proyek');
     }
 
 
@@ -126,6 +127,37 @@ class Investor extends REST_Controller
         } else {
             $this->response(array('status' => 'fail', 502));
         }
+        $this->response( 200);
+    }
+
+    function prosesSimpanInvestasi_post(){
+        $data = $this->input->post();
+        $idProyek = $data['id_proyek'];
+        $idInvestor = $data['idInvestor'];
+        $proyek = $this->M_Proyek->getProyekById($idProyek)->result();
+        $investor = $this->M_Investor->getInvestorById($idInvestor)->result();
+
+        $saldoProyek = (int) $proyek[0]->saldo_proyek;;
+        $jmlInvest = (int) $data['jml_invest'];
+        $saldoUpdate = $saldoProyek + $jmlInvest;
+
+        $jmlInvestorProyek = (int) $proyek[0]->jml_investor;
+        $jmlInvestorProyek = $jmlInvestorProyek + 1;
+
+        $saldoInvestor = (int) $investor[0]->saldo_wallet;
+        $saldoInvestorUpdate = $saldoInvestor - $jmlInvest;
+
+        //update saldo proyek
+        $this->M_Proyek->updateSaldoProyek($saldoUpdate,$idProyek);
+
+        //update jml investor proyek
+        $this->M_Proyek->updateJmlInvestorProyek($jmlInvestorProyek,$idProyek);
+
+        //update pengurangan saldo investor
+        $this->M_Investor->updateSaldoInvestor($saldoInvestorUpdate,$idInvestor);
+
+        //simpan detail investasi
+        $this->M_Investor->simpanDetailInvestasi($data);
         $this->response( 200);
     }
 
